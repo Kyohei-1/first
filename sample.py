@@ -28,23 +28,36 @@
 # print('\n')
 
 # Q4
-str = 'Hi He Lied Because Boron Could Not Oxidize Fluorine. New Nations Might Also Sign Peace Security Clause. Arthur King Can.'
+# str = 'Hi He Lied Because Boron Could Not Oxidize Fluorine. New Nations Might Also Sign Peace Security Clause. Arthur King Can.'
 
-str = str.split()
+# str = str.split()
 
-str1 = str[0][0]
-str5 = str[4][0]
-str6 = str[5][0]
-str7 = str[6][0]
-str8 = str[7][0]
-str9 = str[8][0]
-str15 = str[14][0]
-str16 = str[15][0]
-str19 = str[18][0]
+# str1 = str[0][0]
+# str5 = str[4][0]
+# str6 = str[5][0]
+# str7 = str[6][0]
+# str8 = str[7][0]
+# str9 = str[8][0]
+# str15 = str[14][0]
+# str16 = str[15][0]
+# str19 = str[18][0]
 
-result = '' + str1 + str5 + str6 + str7 + str8 + str9 + str15 + str16 + str19;
+# result = '' + str1 + str5 + str6 + str7 + str8 + str9 + str15 + str16 + str19;
 
-print(result);
-
+# print(result);
 
 # 1, 5, 6, 7, 8, 9, 15, 16, 19
+
+# Q5
+# 1文字ずつ分割するやつと2文字ずつ分割したやつを作ってね
+
+def n_gram(str, ):
+  str = str.split(' ')
+  return str
+
+
+str = 'I am an NLPer'
+
+print('単語(bi-gram)'+n_gram(str,1))
+
+print('文字(bi-gram)'+n_gram(str,2))
