@@ -49,15 +49,27 @@
 # 1, 5, 6, 7, 8, 9, 15, 16, 19
 
 # Q5
-# 1文字ずつ分割するやつと2文字ずつ分割したやつを作ってね
-
-def n_gram(str, ):
-  str = str.split(' ')
-  return str
+# 1文字するやつと2文字ずつ分割したやつを作ってね
 
 
-str = 'I am an NLPer'
+# 単語か文字家を判断するflg
+# 分割する文字数を格納するcount
+def n_gram(flg):
+  string = "I am an NLPer"
 
-print('単語(bi-gram)'+n_gram(str,1))
+  # 単語の場合
+  if flg == 'word':
+    return string.split(' ')
+  
+  else:
+    
+    return 
 
-print('文字(bi-gram)'+n_gram(str,2))
+print('単語')
+print(n_gram('word'))
+
+print('文字')
+print(n_gram('letter'))
+
+
+
