@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # kyori = 507.5
 # jisoku = 80
 # jikan = kyori / jisoku
@@ -36,6 +38,10 @@
 # cm = float(inch) * per_inch
 # desc = '{0}inch = {1}cm'.format(inch,cm)
 # print(desc)
+
+
+from random import *
+
 
 def changeInt(word):
     return int(word)
@@ -114,7 +120,30 @@ def changeStr(word):
 # print(a[3])
 # print(len(a))
 
-points = [88,76,67,43,79,80,91]
-print(round(sum(points)/len(points)))
-print(sum(points))
-print(len(points))
+# points = [88, 76, 67, 43, 79, 80, 91]
+# # print(round(sum(points)/len(points)))
+# # print(sum(points))
+# # print(len(points))
+# pointsSum = 0
+# # # iに配列の値が順次入る→sumにiを足す
+# # for i in points:
+# #     sum += i
+# #     print(sum)
+# pointsSum = sum(points)
+# print(pointsSum)
+
+
+# ランダムにモンスターを格納
+monster = ['タイラント', 'ネメシス', 'ゾンビ', 'フリッカー', 'ハンターα', 'ハンターγ']
+# print(len(monster))
+# monster.append('村長')
+# monster.append('ウェスカー')
+# print(len(monster))
+# Monster = monster[randint(0,int(len(monster)-1))]
+# print(Monster)
+if not monster:
+    print('False')
+else:
+    print(list(enumerate(monster)))
+    print('Success')
+
