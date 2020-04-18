@@ -134,16 +134,75 @@ def changeStr(word):
 
 
 # ランダムにモンスターを格納
-monster = ['タイラント', 'ネメシス', 'ゾンビ', 'フリッカー', 'ハンターα', 'ハンターγ']
-# print(len(monster))
-# monster.append('村長')
-# monster.append('ウェスカー')
-# print(len(monster))
-# Monster = monster[randint(0,int(len(monster)-1))]
-# print(Monster)
-if not monster:
-    print('False')
-else:
-    print(list(enumerate(monster)))
-    print('Success')
+monster1 = ['タイラント', 'ネメシス', 'ゾンビ']
+monster2 = ['フリッカー', 'ハンターα', 'ハンターγ']
+# # print(len(monster))
+# # monster.append('村長')
+# # monster.append('ウェスカー')
+# # print(len(monster))
+# # Monster = monster[randint(0,int(len(monster)-1))]
+# # print(Monster)
+# # if not monster:
+# #     print('False')
+# # else:
+# # print(list(enumerate(monster1+monster2)))
+# #     print('Success')
+# monster3 = monster1 + monster2
+# print(monster1)
+# print(monster2)
+# print(monster3)
+# print(monster1)
+# print(monster1.extend(monster2))
+# tup = (
+#     'ポッチャマ','ヒコザル','ナエトル'
+# )
+# print(type(tup))
+# # tupleは変更出来ないってことか
+# # tup.append('アルセウス')
+# print(tup)
+monster1 = ['タイラント', 'ネメシス', 'ゾンビ']
+monster2 = ['フリッカー', 'ハンターα', 'ハンターγ']
+monster3 = monster1.append(monster2)
+# print(monster1.append(monster2))
+# print(monster1)
+# print(monster1.extend(monster2))
+# print(type(monster1))
+# print(type(monster3))
+# if monster3 is None:
+#     print('あかんやん')
 
+# print(monster1)
+# print(monster3)
+# print(monster1[0:2])
+
+# ステップ値に-をつけると逆になる
+# str[::-2]はひっくり返して2文字ごとにスライス（取り出す）
+# str = 'stressed'
+# str = str[::-2]
+# print(str)
+
+# del monster1
+# print(monster1)
+
+# 集合型を生成
+score1 = {
+    11,53,73,94,2,58,93,83,100,72
+}
+
+score2 = {
+    35,83,100,83,94,2,94,82,82,95,1
+}
+# print(sorted(score1+score2))
+# print(score3)
+
+# print('和：'+str(score1|score2))
+# print('差：'+str(score1-score2))
+# print('または：'+score1^score2)
+# print('かつ：'+score1&score2)
+
+age = {
+    '鈴木':30,'井上':45,'佐藤':60
+}
+
+print(sorted(age.keys()))
+print(sorted(age.values()))
