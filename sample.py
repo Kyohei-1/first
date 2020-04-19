@@ -54,22 +54,24 @@
 
 # 単語か文字家を判断するflg
 # 分割する文字数を格納するcount
-def n_gram(flg):
-  string = "I am an NLPer"
+# def n_gram(flg):
+#   string = "I am an NLPer"
 
-  # 単語の場合
-  if flg == 'word':
-    return string.split(' ')
-  
-  else:
-    
-    return 
+#   # 単語の場合
+#   if flg == 'word':
+#     return string.split(' ')
+#   else:
+#     string = string.split(' ')
+#     string = ''.join(string)
+#     print(string)
 
-print('単語')
-print(n_gram('word'))
+#     return list(string[::1])
 
-print('文字')
-print(n_gram('letter'))
+# print('単語')
+# print(n_gram('word'))
 
+# print('文字')
+# print(n_gram('letter'))
 
-
+def syaku_to_cm(syaku):
+  return round(syaku * 30.303,3)
