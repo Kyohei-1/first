@@ -391,3 +391,81 @@
 
 # print(math.pi)
 
+# some_list = [1,2,3,4,5]
+# print(some_list)
+# print(len(some_list))
+# some_list = [2,4,6,8,10]
+# some_list = [i * 10 for i in some_list]
+# print(some_list)
+
+# tuple_list = (1,2,3,4,5)
+# print(tuple_list)
+# # tuple_list[2] = 5
+# print(tuple_list)
+
+# someList = dict([(1,'basu'),(2,'par')])
+# print(someList[2])
+# print(someList.values())
+
+# def helloWorld(firstName,secondName):
+#   print('Hello,'+' '+firstName+' '+secondName)
+
+# helloWorld(firstName='Tanaka',secondName='Daisuke')
+
+# class Foo:
+#   def sayHello(self,name):
+#     print('Hello,{}'.format(name))
+
+# foo = Foo()
+# foo.sayHello('John Doe')
+
+# クラス
+# class Foo:
+#   def __init__(self,value):
+#     self.value = value
+#   def setValue(self,value):
+#     self.value = value
+#   def getValue(self):
+#     return self.value
+
+# foo = Foo(100)
+# print(foo.getValue())
+# foo.setValue(42)
+# print(foo.getValue())
+
+# with open('/Users/kyohei/Desktop/tmp/python/sample.py') as f:
+#   text = f.read()
+
+# from sample import helloWorld
+# helloWorld()
+
+# import math
+# print(math.exp(2))
+
+# import re
+# pattern = r'\d+'
+
+# if re.search(pattern,'りんごは100円です'):
+#   print('matched by re.search')
+# if re.match(pattern,'りんごは100円です'):
+#   print('match by re.match')
+
+# rx = re.compile(pattern)
+
+# if rx.search('りんごは100円です'):
+#   print('matched by rx.search')
+
+# import numpy as np
+# vector = np.array([0,1,2])
+
+# matrix = np.array([
+#   [0,1,2],
+#   [3,4,5],
+#   [6,7,8]
+# ])
+# Sum = matrix + vector
+# print(vector.shape)
+# print(matrix.shape)
+# print(Sum)
+# Sum = matrix * vector
+# print(Sum)

@@ -73,5 +73,11 @@
 # print('文字')
 # print(n_gram('letter'))
 
-def syaku_to_cm(syaku):
-  return round(syaku * 30.303,3)
+# def syaku_to_cm(syaku):
+  # return round(syaku * 30.303,3)
+
+# def helloWorld():
+#   print('Hello, world')
+
+# if __name__ == '__main__':
+#   helloWorld()
