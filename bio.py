@@ -8,3 +8,5 @@ Monster = monster[randint(0,int(len(monster)-1))]
 print(Monster)
 
 # やっぱ遊んでみるのが一番理解が深まるよね。
+
+print('眠い')
