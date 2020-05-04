@@ -469,3 +469,32 @@
 # print(Sum)
 # Sum = matrix * vector
 # print(Sum)
+
+# import numpy as np
+# arr = np.array([
+#   [0.1,0.4,0.3],
+#   [0.9,0.1,0.5],
+#   [0.3,0.6,0.1],
+# ])
+
+# print(np.argmax(arr,axis=0))
+# print(np.argmax(arr,axis=1))
+# print(np.random.randint(1,30000))
+
+import MeCab
+tagger = MeCab.Tagger()
+# print(tagger.parse('私は今日もお金の為にバイトに行きます'))
+
+def tokenize(text):
+  node = tagger.parseToNode(text)
+
+  tokens = []
+  while node:
+    if node.surface != '':
+      tokens.append(node.surface)
+
+    node = node.next
+
+  return tokens
+
+print(tokenize('僕は真実の事が好きです'))

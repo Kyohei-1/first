@@ -81,3 +81,8 @@
 
 # if __name__ == '__main__':
 #   helloWorld()
+
+import MeCab
+
+tagger = MeCab.Tagger()
+print(tagger.parce('わたしは腹が減った'))
