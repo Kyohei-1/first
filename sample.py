@@ -74,7 +74,7 @@
 # print(n_gram('letter'))
 
 # def syaku_to_cm(syaku):
-  # return round(syaku * 30.303,3)
+# return round(syaku * 30.303,3)
 
 # def helloWorld():
 #   print('Hello, world')
@@ -82,7 +82,49 @@
 # if __name__ == '__main__':
 #   helloWorld()
 
-import MeCab
+# 6
+# def n_gram(st,n):
+#   return [st[i:i+n] for i in range(len(st)-n+1)]
 
-tagger = MeCab.Tagger()
-print(tagger.parce('わたしは腹が減った'))
+
+
+# X = set(n_gram("paraparaparadise",2))
+# Y = set(n_gram("paragraph",2))
+
+# # print(X)
+# # print(Y)
+
+# # 和集合
+# print(X|Y);
+# # 積集合
+# print(X&Y);
+# # 差集合
+# print(X-Y);
+# # 含まれているか
+# print('se' in X);
+# print('se' in Y);
+
+# 7
+# def temp(x,y,z):
+#   print("{}時の{}は{}".format(x,y,z));
+
+# temp(12,'気温',22.4)
+
+# 8
+def cipher(target):
+  result = '';
+  for moji in target:
+    if moji.islower():
+      result += chr(219-ord(moji))
+    else:
+      result += moji
+  return result
+
+t = "helloworld"
+# 暗号化
+coded = cipher(t)
+print('暗号化:' + coded)
+
+# 復号化
+decoded = cipher(coded)
+print('復号化:' + decoded)
