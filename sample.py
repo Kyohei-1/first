@@ -111,20 +111,30 @@
 # temp(12,'気温',22.4)
 
 # 8
-def cipher(target):
-  result = '';
-  for moji in target:
-    if moji.islower():
-      result += chr(219-ord(moji))
-    else:
-      result += moji
-  return result
+# def cipher(target):
+#   result = '';
+#   for moji in target:
+#     if moji.islower():
+#       result += chr(219-ord(moji))
+#     else:
+#       result += moji
+#   return result
 
-t = "helloworld"
-# 暗号化
-coded = cipher(t)
-print('暗号化:' + coded)
+# targetWord = "helloworld"
+# # 暗号化
+# coded = cipher(targetWord)
+# print('暗号化:' + coded)
 
-# 復号化
-decoded = cipher(coded)
-print('復号化:' + decoded)
+# # 復号化
+# decoded = cipher(coded)
+# print('復号化:' + decoded)
+
+import random
+
+str = 'I couldn’t believe that I could actually understand what I was reading : the phenomenal power of the human mind'
+
+def change(str):
+  strAfter = str.split(' ')
+  print(strAfter)
+
+change(str)
