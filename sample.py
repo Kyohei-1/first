@@ -120,21 +120,52 @@
 #       result += moji
 #   return result
 
-# targetWord = "helloworld"
+# t = "helloworld"
 # # 暗号化
-# coded = cipher(targetWord)
+# coded = cipher(t)
 # print('暗号化:' + coded)
 
 # # 復号化
 # decoded = cipher(coded)
 # print('復号化:' + decoded)
 
+# 9
 import random
+# https://qiita.com/segavvy/items/be0f59af4b410069516d
 
-str = 'I couldn’t believe that I could actually understand what I was reading : the phenomenal power of the human mind'
+string = 'I couldn’t believe that I could actually understand what I was reading : the phenomenal power of the human mind'
+# リストを作る
+result = [];
 
-def change(str):
-  strAfter = str.split(' ')
-  print(strAfter)
 
-change(str)
+def Typoglycemia(target):
+  # globalのresultを使う
+  global result
+
+  # 空白区切りでリストにする
+  for i in target.split(' '):
+    # iに単語が入ってるので、4文字以上なら
+    if len(i) >= 4:
+      # 先頭の文字を格納
+      tmp_first = i[0]
+      # 最後尾の文字を格納
+      tmp_last = i[-1]
+      # 残りの順番をランダムにシャッフル
+      tmp_list = (i[1:-1])
+      tmp_list = random.sample(tmp_list,k=len(tmp_list))
+
+      # # 合体
+      result.append(tmp_first + ''.join(tmp_list) + tmp_last)
+      # print(result)
+    else:
+      # 3文字以下の場合は何もしないのでそのまま追加する
+      result.append(i)
+
+  # リスト型になっているresultを' 'で区切って文字列にする
+  result = (' '.join(result))
+  # 結果を返却する
+  return result
+
+# 文字列じゃないと表示できない？らしい
+print(Typoglycemia(string))
+
