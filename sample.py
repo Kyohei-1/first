@@ -23,6 +23,7 @@
 # import re
 # str = 'Now I need a drink, alcoholic of course, after the heavy lectures involving quantum mechanics.'
 
+# '\s'にした理由忘れたので、また調べときます。
 # split_after = re.split('\s', str.replace('.', ''))
 # print(split_after)
 # print('\n')
@@ -87,7 +88,6 @@
 #   return [st[i:i+n] for i in range(len(st)-n+1)]
 
 
-
 # X = set(n_gram("paraparaparadise",2))
 # Y = set(n_gram("paragraph",2))
 
@@ -130,42 +130,41 @@
 # print('復号化:' + decoded)
 
 # 9
-import random
-# https://qiita.com/segavvy/items/be0f59af4b410069516d
+# import random
+# # https://qiita.com/segavvy/items/be0f59af4b410069516d
 
-string = 'I couldn’t believe that I could actually understand what I was reading : the phenomenal power of the human mind'
-# リストを作る
-result = [];
+# string = 'I couldn’t believe that I could actually understand what I was reading : the phenomenal power of the human mind'
+# # リストを作る
+# result = [];
 
 
-def Typoglycemia(target):
-  # globalのresultを使う
-  global result
+# def Typoglycemia(target):
+#   # globalのresultを使う
+#   global result
 
-  # 空白区切りでリストにする
-  for i in target.split(' '):
-    # iに単語が入ってるので、4文字以上なら
-    if len(i) >= 4:
-      # 先頭の文字を格納
-      tmp_first = i[0]
-      # 最後尾の文字を格納
-      tmp_last = i[-1]
-      # 残りの順番をランダムにシャッフル
-      tmp_list = (i[1:-1])
-      tmp_list = random.sample(tmp_list,k=len(tmp_list))
+#   # 空白区切りでリストにする
+#   for i in target.split(' '):
+#     # iに単語が入ってるので、4文字以上なら
+#     if len(i) >= 4:
+#       # 先頭の文字を格納
+#       tmp_first = i[0]
+#       # 最後尾の文字を格納
+#       tmp_last = i[-1]
+#       # 残りの順番をランダムにシャッフル
+#       tmp_list = (i[1:-1])
+#       tmp_list = random.sample(tmp_list,k=len(tmp_list))
 
-      # # 合体
-      result.append(tmp_first + ''.join(tmp_list) + tmp_last)
-      # print(result)
-    else:
-      # 3文字以下の場合は何もしないのでそのまま追加する
-      result.append(i)
+#       # # 合体
+#       result.append(tmp_first + ''.join(tmp_list) + tmp_last)
+#       # print(result)
+#     else:
+#       # 3文字以下の場合は何もしないのでそのまま追加する
+#       result.append(i)
 
-  # リスト型になっているresultを' 'で区切って文字列にする
-  result = (' '.join(result))
-  # 結果を返却する
-  return result
+#   # リスト型になっているresultを' 'で区切って文字列にする
+#   result = (' '.join(result))
+#   # 結果を返却する
+#   return result
 
-# 文字列じゃないと表示できない？らしい
-print(Typoglycemia(string))
-
+# # 文字列じゃないと表示できない？らしい
+# print(Typoglycemia(string))
