@@ -7,17 +7,19 @@ count = 0
 path = ''.join(sys.argv[1])
 # 使うファイルのパスを指定
 
-with open(path) as fileData:
-    # withを使うとファイルを閉じるのは勝手にやってくれる...らしい。
-    # asをつけたのはfileNameのインスタンス（中身）の文章を取得したいから。
 
-    for i in fileData:
-        # 1行ずつ回してカウントする
+def countLen(path, count=0):
+    with open(path) as fileData:
+        # withを使うとファイルを閉じるのは勝手にやってくれる...らしい。
+        # asをつけたのはfileNameのインスタンス（中身）の文章を取得したいから。
 
-        count += 1
-        # カウントを足す
+        for i in fileData:
+            # 1行ずつ回してカウントする
 
-    print(count)
-    # ループを抜けたら表示
+            count += 1
+            # カウントを足す
+
+        print(count)
+        # ループを抜けたら表示
 
 # python /Users/kyohei/Desktop/100knock/knock10.py /Users/kyohei/Desktop/100knock/popular-names.txt
