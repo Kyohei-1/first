@@ -9,10 +9,12 @@ df = pd.read_csv(option1, sep='\t', header=None)
 # pandasのread_csvでファイルを読み込んで、区切りは'\t'
 # headerはNoneとする
 
-print(df[0].unique())
+df = df[0].unique()
+df.sort()
+print(df)
 # df[0] つまり1行目の重複しないデータを取ってくる
 
 # python knock17.py ./popular-names.txt
 
-# cut 名前の行を取ってくる sort アルファベット順 unique
 # TODO:
+# cat popular-names.txt | cut -f 1 | sort | uniq -c

@@ -14,4 +14,10 @@ print(df_data)
 
 # python knock19.py ./popular-names.txt
 
-# TODO:
+# TODO
+# cat popular-names.txt | cut -f 1 | sort -r -n | uniq -c -i | sort -r -n
+
+# cut -f 1 1行目を取る
+# sort -r -n 逆順にする 数字を並び替える
+# uniq -c 重複は要らんから死を
+# sort -r -n もう一回ちゃんと並べ直す。
