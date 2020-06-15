@@ -10,7 +10,7 @@ def isCategory(splitedWord):
     # # カテゴリー行を正規表現で判定
     a = ''
     pattern = (
-        r'^(\[\[Category:.+\]\])$'
+        r'(\[\[Category:.+\]\])'
         # 行頭から ^
         # ()中の物のグループ化
         # []はエスケープが必要だった気がするので\を付けて
@@ -51,4 +51,4 @@ with open(path, 'r') as File1:
         # [[Category:島国]]
         # [[Category:1801年に成立した国家・領域]]
 
-        # python21.py ./knock20_result.txt
+        # python knock21.py ./knock20_result.txt
