@@ -22,9 +22,18 @@ def isCategory(splitedWord):
 
 
 def pickInnerWord(text):
+    # print(text)
+    text = text.split('|')[0]
+    # re.subで置換して生き残る'|'までを0番目、
+    # 以降を1番目と判断するので、'|'までを取ってくる
+    # str.find()、str.partitionでも同様に動いた。
     text = re.sub(r"\W", "", text)
     # \Wで英数字以外を置換
     text = text.replace('Category', '')
+    # text = text.replace('', '')
+    # text = text.split('|')[0]
+
+    # print(text)
     # 邪魔なので置換
     return text
 
@@ -52,14 +61,14 @@ with open(path, 'r') as File1:
                 print(w)
 
         # 実行結果
-        # [[Category:イギリス|*]]
-        # [[Category:イギリス連邦加盟国]]
-        # [[Category:英連邦王国 | *]]
-        # [[Category:G8加盟国]]
-        # [[Category:欧州連合加盟国 | 元]]
-        # [[Category:海洋国家]]
-        # [[Category:現存する君主国]]
-        # [[Category:島国]]
-        # [[Category:1801年に成立した国家・領域]]
+        # イギリス
+        # イギリス連邦加盟国
+        # 英連邦王国
+        # G8加盟国
+        # 欧州連合加盟国
+        # 海洋国家
+        # 現存する君主国
+        # 島国
+        # 1801年に成立した国家領域
 
         # python knock22.py ./knock20_result.txt
