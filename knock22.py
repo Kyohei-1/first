@@ -10,12 +10,10 @@ def isCategory(splitedWord):
     # # カテゴリー行を正規表現で判定
     a = ''
     pattern = (
-        r'(\[\[Category:.+\]\])'
-        # 行頭から ^
-        # ()中の物のグループ化
+        r'\[\[Category:(.+)\]\]'
+        # \[\[Category:
         # []はエスケープが必要だった気がするので\を付けて
         # [[Category から始まって ]] で終わる 3 桁以上の文字列なので、.+
-        # $は行末にあっても取るよ
     )
     a = re.match(pattern, splitedWord)
     return a
@@ -27,7 +25,8 @@ def pickInnerWord(text):
     # re.subで置換して生き残る'|'までを0番目、
     # 以降を1番目と判断するので、'|'までを取ってくる
     # str.find()、str.partitionでも同様に動いた。
-    text = re.sub(r"\W", "", text)
+    # print(text)
+    # text = re.sub(r"\W", "", text)
     # \Wで英数字以外を置換
     text = text.replace('Category', '')
     # text = text.replace('', '')
