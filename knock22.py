@@ -68,6 +68,6 @@ with open(path, 'r') as File1:
         # 海洋国家
         # 現存する君主国
         # 島国
-        # 1801年に成立した国家領域
+        # 1801年に成立した国家・領域
 
         # python knock22.py ./knock20_result.txt
