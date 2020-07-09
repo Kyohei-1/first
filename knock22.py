@@ -37,27 +37,28 @@ def pickInnerWord(text):
     return text
 
 
-with open(path, 'r') as File1:
-    ReadFile = File1.readlines()
-    # print(ReadFile)
-    for word in ReadFile:
-        splitedWord = word.split('\n')
-        # 改行を消す
-        splitedWord = ''.join(splitedWord)
+with open('./KF22.txt', 'w') as wFile:
+    with open(path, 'r') as File1:
+        ReadFile = File1.readlines()
+        # print(ReadFile)
+        for word in ReadFile:
+            splitedWord = word.split('\n')
+            # 改行を消す
+            splitedWord = ''.join(splitedWord)
 
-        # print(splitedWord)
-        # print(a)
+            # print(splitedWord)
+            # print(a)
 
-        a = isCategory(splitedWord)
+            a = isCategory(splitedWord)
 
-        if a is not None:
-            # Noneのもの（カテゴリーじゃないもの）は要らないので、ここで判定
-            for w in a.groups():
-                # groups()で値を取ってこれるみたい。
-                # groupsがないとre.Match objectとやらが返ってきた
-                # print(w)
-                w = pickInnerWord(w)
-                print(w)
+            if a is not None:
+                # Noneのもの（カテゴリーじゃないもの）は要らないので、ここで判定
+                for w in a.groups():
+                    # groups()で値を取ってこれるみたい。
+                    # groupsがないとre.Match objectとやらが返ってきた
+                    # print(w)
+                    w = pickInnerWord(w)
+                    wFile.write(w+'\n')
 
         # 実行結果
         # イギリス
