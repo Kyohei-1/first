@@ -1,7 +1,7 @@
 txt = './KF_neko.txt.mecab'
 mapData = {}
 listData = []
-with open('./KF30.txt', 'w') as writeFile:
+with open('./KF32.txt', 'w') as writeFile:
     with open(txt, 'r') as readFile:
         for text in readFile:
             # print(text)
@@ -19,16 +19,11 @@ with open('./KF30.txt', 'w') as writeFile:
             if splitted == ['EOS\n']:
                 continue
             else:
-                # 原型（基本形）
-                base = splitted[6]
                 # 品詞
                 pos = splitted[0]
-                # 品詞細分類
-                pos1 = splitted[1]
-                mapData = {
-                    'surface': surface,
-                    'base': base,
-                    'pos': pos,
-                    'pos1': pos1,
-                }
-                print(mapData)
+                if pos in ('動詞'):
+                    dousi = splitted[6]
+                    mapData = {
+                        '動詞の原型': dousi,
+                    }
+                    writeFile.write(str(mapData)+'\n')
