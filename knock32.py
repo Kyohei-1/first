@@ -22,8 +22,6 @@ with open('./KF32.txt', 'w') as writeFile:
                 # 品詞
                 pos = splitted[0]
                 if pos in ('動詞'):
-                    dousi = splitted[6]
-                    mapData = {
-                        '動詞の原型': dousi,
-                    }
-                    writeFile.write(str(mapData)+'\n')
+                    # 原形 index[6]を入れる
+                    dousiGennkei = splitted[6]
+                    writeFile.write(dousiGennkei+'\n')

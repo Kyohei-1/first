@@ -29,6 +29,6 @@ with open('./KF30.txt', 'w') as writeFile:
                     'surface': surface,
                     'base': base,
                     'pos': pos,
-                    'pos1': pos1,
+                    'pos1': pos1
                 }
-                print(mapData)
+                writeFile.write(str(mapData)+'\n')
