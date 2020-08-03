@@ -1,4 +1,5 @@
 # coding: utf-8
+import numpy as np
 import re
 from collections import Counter
 import matplotlib.pyplot as plt
@@ -34,35 +35,38 @@ with open('./KF36.txt', 'w') as writeFile:
             x.append(i)
             y.append(j)
 
-        plt.plot(x, y)
+        left = np.array(x)
+        height = np.array(y)
+        plt.bar(left, height, color="#ABCDEF", linewidth=0)
+        # plt.plot(x, y)
         plt.show()
-    # word = words.split(',')
-    # word += words
-    # print(word)
-    # writeFile.write(resultList)
-    # # 表層形以外をバラす
-    # resultList.append(surface)
-    # if len(listData) > 1:
-    #     writeFile.write(str(resultList))
+# word = words.split(',')
+# word += words
+# print(word)
+# writeFile.write(resultList)
+# # 表層形以外をバラす
+# resultList.append(surface)
+# if len(listData) > 1:
+#     writeFile.write(str(resultList))
 
-    # print(word+':'+str(cnt))
+# print(word+':'+str(cnt))
 
-    # print(resultList)
-    # splitted = listData[-1].split(',')
-    # # EOSが入ってたら消す
-    # if splitted == ['EOS\n']:
-    #     continue
-    # else:
-    #     # 原型（基本形）
-    #     base = splitted[6]
-    #     # 品詞
-    #     pos = splitted[0]
-    #     # 品詞細分類
-    #     pos1 = splitted[1]
-    #     mapData = {
-    #         'surface': surface,
-    #         'base': base,
-    #         'pos': pos,
-    #         'pos1': pos1
-    #     }
-    #     writeFile.write(str(mapData)+'\n')
+# print(resultList)
+# splitted = listData[-1].split(',')
+# # EOSが入ってたら消す
+# if splitted == ['EOS\n']:
+#     continue
+# else:
+#     # 原型（基本形）
+#     base = splitted[6]
+#     # 品詞
+#     pos = splitted[0]
+#     # 品詞細分類
+#     pos1 = splitted[1]
+#     mapData = {
+#         'surface': surface,
+#         'base': base,
+#         'pos': pos,
+#         'pos1': pos1
+#     }
+#     writeFile.write(str(mapData)+'\n')
