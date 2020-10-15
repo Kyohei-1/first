@@ -7,9 +7,14 @@
 class Morph:
     def __init__(self, data):
         self.surface = data['surface']  # 表層形
-        self.surface = data['base']  # 基本形
+        self.base = data['base']  # 基本形
         self.pos = data['pos']  # 品詞
         self.pos1 = data['pos1']  # 品詞細分類1
+
+    def __repr__(self):
+        return "surface:{}\tbase:{}\tpos:{}\tpos1:{}".format(
+            self.surface, self.base, self.pos, self.pos1
+        )
 
 # 行頭文字判定
 
@@ -37,12 +42,21 @@ def split_t_and_parse(data):
     # =====品詞細分類=====
     pos1 = splitted_data[1]
 
+    # print('surface:'+surface)
+    # print('base:'+base)
+    # print('pos:'+pos)
+    # print('pos1:'+pos1)
+
+
+
     parsed_data = {
         'surface': surface,
         'base': base,
         'pos': pos,
         'pos1': pos1
     }
+
+
 
     return parsed_data
 
@@ -68,6 +82,7 @@ with open(path, 'r') as read_data:
                 # morph = Morph(parsed_data)
                 # print(parsed_data)
                 morph = Morph(parsed_data)
+                # print(morph)
                 sentence.append(morph)
             else:
                 # 先頭がEOSなら
@@ -83,10 +98,12 @@ with open(path, 'r') as read_data:
                 # document.append(sentence)
     # for text in document:
     #     print(text)
-    # print(sentence)
+    # print(document)
     # print(sentence)
 
-    print(document)
+    # for sentence in document:
+    #     for morph in sentence:
+    #         print(morph)
     #   # morph = Morph(data)
     # print(data)
     # else: #行頭がEOSならそこまでを一文とする
