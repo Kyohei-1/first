@@ -1,7 +1,6 @@
 # coding: utf-8
 
 import re
-# また書くの面倒だからね
 import knock40
 
 # 41. 係り受け解析結果の読み込み（文節・係り受け）Permalink
@@ -9,38 +8,58 @@ import knock40
 
 
 class Chunk:
-    def __init__(self, dst):
+    def __init__(self, chunk_id, dst, morph):
 
-        self.morphs = []  # Morphオブジェクトのリスト
+        self.morph = []  # Morphオブジェクトのリスト
         self.dst = dst  # 係り先文節インデックス番号
         self.srcs = []  # 係り元文節インデックス番号のリスト
 
 
-text_path = './data/ai.ja.txt.parsed'
-start_with_asterisk = []
-start_with_other = []
-# 文節番号を入れるリスト
-clause_number = []
-# 係り先番号を入れるリスト
-clerk_target_number = []
+class Morph:
+    def __init__(self, data):
+        self.surface = data['surface']  # 表層形
+        self.base = data['base']  # 基本形
+        self.pos = data['pos']  # 品詞
+        self.pos1 = data['pos1']  # 品詞細分類1
 
-with open(text_path, 'r') as read_data:
-    for read_text in read_data:
-        if read_text.startswith('*'):
-            read_text = read_text.rstrip('\n')
-            # \tと半角空白で区切る
-            read_text = re.split('[\t, ]', read_text)
-            read_text = read_text
-            clause_number.append(read_text[1])  # 文節番号
-            clerk_target_number.append(read_text[2].rstrip('D'))  # 係り先番号
+    def __repr__(self):
+        return "surface:{}\tbase:{}\tpos:{}\tpos1:{}".format(
+            self.surface, self.base, self.pos, self.pos1
+        )
 
-            # print(start_with_asterisk)
-        else:  # * じゃない行はこっち
-            # print(read_text)
-            read_text = re.split('[\t, ]', read_text)
-            print(read_text[0])
-            # start_with_other.append(read_text.strip())
-            # start_with_other = start_with_other.split(',')
-            # print(start_with_other[6])
-# print(clerk_target_number)
-# print(clause_number)
+
+# 文節を判断するフラグ
+# 最初はTrueで、行頭が「*」以外だとFalseにする
+judgement_flag = True
+
+# 入れとくリスト
+sentence = []
+
+with open('./ai.ja.txt.parsed-min') as read_file:
+    for line in read_file:
+        # 先頭がEOSで無いなら
+        if not line.startswith('EOS'):
+            # 解析結果がある行はこっち
+            if line.startswith('*'):
+                # 行頭が文字ではない→「*」である→新たな行頭が来たという判断
+                if judgement_flag == False:
+                    # Chunk(chunk_id, dst, morphs) を作ってsentenceリストにappend
+                    sentence.append(Chunk(chunk_id, dst, morph))
+
+                judgement_flag = True
+                # \tと半角空白で分割する
+                splitted = re.split('[\t, ]', line)
+                # 文節番号入れとく
+                chunk_id = splitted[1]
+                # 一つ前の文節番号と比較して同じもしくは小さくなっている場合
+                # 文節が変わっている
+                dst = splitted[2].rstrip('D')  # 係り先番号入れる
+
+            else:  # 文字がある方はこっち
+                judgement_flag = False
+                parsed_data = knock40.split_t_and_parse(line)
+                # morphオブジェクト作るやで
+                morph = Morph(parsed_data)
+        # 行頭がEOSならば文の終わりなので係り元を埋める
+        # else:
+print(sentence)
