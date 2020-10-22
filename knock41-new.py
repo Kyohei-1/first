@@ -20,17 +20,18 @@ class Chunk:
     def __init__(self, chunk_id, dst):
 
         self.chunk_id = chunk_id  # 文節番号
-        self.morph = []  # Morphオブジェクトのリスト
         self.dst = dst  # 係り先文節インデックス番号
         self.srcs = []  # 係り元文節インデックス番号のリスト
+        self.morphs = []  # Morphオブジェクトのリスト
+
 
     def __repr__(self):
-        return "{}\tmorph:{}dst:{}\t".format(
-            self.chunk_id, self.morph, self.dst)
+        return "{}\tdst:{}\tsrcs:{}\tmorphs:{}".format(
+            self.chunk_id, self.dst, self.srcs,self.morphs)
+
+
 
 # \tで区切って表層系などに分ける
-
-
 def split_t_and_parse(data):
     splitted_data = data.split('\t')
     # =====表層系=====
@@ -50,11 +51,6 @@ def split_t_and_parse(data):
 
     # =====品詞細分類=====
     pos1 = splitted_data[1]
-
-    # print('surface:'+surface)
-    # print('base:'+base)
-    # print('pos:'+pos)
-    # print('pos1:'+pos1)
 
     parsed_data = {
         'surface': surface,
@@ -102,6 +98,6 @@ with open(path, 'r') as read_file:
             # morphを作ります
             morph = Morph(parsed_data)
             # chunkに突っ込みます
-            chunk.morph = morph
+            chunk.morphs.append(morph)
 
 print(document)
