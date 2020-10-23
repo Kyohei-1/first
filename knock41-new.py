@@ -24,11 +24,9 @@ class Chunk:
         self.srcs = []  # 係り元文節インデックス番号のリスト
         self.morphs = []  # Morphオブジェクトのリスト
 
-
     def __repr__(self):
-        return "{}\tdst:{}\tsrcs:{}\tmorphs:{}".format(
-            self.chunk_id, self.dst, self.srcs,self.morphs)
-
+        return "chunk_id:{}\tdst:{}\tsrcs:{}\tmorphs:{}".format(
+            self.chunk_id, self.dst, self.srcs, self.morphs)
 
 
 # \tで区切って表層系などに分ける
@@ -68,10 +66,14 @@ sentence = []
 document = []
 # 読み込むテキスト
 path = './ai.ja.txt.parsed-min'
+# dstを入れるリスト
+dst_list = []
+# chunk_idを入れるリスト
+chunk_id_list = []
 
 # ファイルを読み込む
 with open(path, 'r') as read_file:
-        # 1行読み込む
+    # 1行読み込む
     for line in read_file:
         # *で始まったなら
         if line.startswith('*'):
@@ -79,15 +81,32 @@ with open(path, 'r') as read_file:
             splitted = re.split('[\t ]', line)
             # 文節番号
             chunk_id = splitted[1]
+
             # 係り先番号
             dst = splitted[2].rstrip('D')
             # chunkを作る（chunk_idとdstを入れる）
-            chunk = Chunk(chunk_id,dst)
+            chunk = Chunk(chunk_id, dst)
+
+            # 係り先番号をキープするリストに入れる
+            dst_list.append(dst)
+            # 文節番号をキープする配列に入れる
+            chunk_id_list.append(chunk_id)
+
+            # TODO:========================
+            # print(chunk.chunk_id) #文節番号
+            # print(chunk.dst) #係り先番号
+            # =============================
+
+            # print('dst\t{}\tchunk_id\t{}'.format(dst,chunk_id))
+            # for chunk_id in chunk:
+            #     print(chunk_id)
+            # chunkAがchunkBに係ってる（chunkA.dst == chunkB.chink_id）なら、chunkBのsrcsにchunkAのchunk_idを登録してやればいいよねぇ
 
         # 行頭がEOS
         elif line.startswith('EOS'):
             # chunkをsentenceに入れる
             sentence.append(chunk)
+
             # sentenceをdocumentに入れる
             document.append(sentence)
 
@@ -99,5 +118,3 @@ with open(path, 'r') as read_file:
             morph = Morph(parsed_data)
             # chunkに突っ込みます
             chunk.morphs.append(morph)
-
-print(document)
