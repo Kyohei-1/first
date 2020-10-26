@@ -92,23 +92,30 @@ with open(path, 'r') as read_file:
             # 文節番号をキープする配列に入れる
             chunk_id_list.append(chunk_id)
 
-            # TODO:========================
-            # print(chunk.chunk_id) #文節番号
-            # print(chunk.dst) #係り先番号
-            # =============================
+            print('文節番号\t'+chunk_id+'\t'+'係り先番号\t'+dst)
 
             # print('dst\t{}\tchunk_id\t{}'.format(dst,chunk_id))
             # for chunk_id in chunk:
             #     print(chunk_id)
             # chunkAがchunkBに係ってる（chunkA.dst == chunkB.chink_id）なら、chunkBのsrcsにchunkAのchunk_idを登録してやればいいよねぇ
 
+            # 文節番号
+
         # 行頭がEOS
         elif line.startswith('EOS'):
             # chunkをsentenceに入れる
             sentence.append(chunk)
-
             # sentenceをdocumentに入れる
             document.append(sentence)
+
+            # for chunk_id in chunk_id_list:  # 文節番号
+            #     for dst in dst_list:  # 係り先番号
+            #         print(chunk_id+'\t'+dst)
+            #         if chunk_id == dst:
+            #             # print('一致')
+            #             #             print('文節番号\t'+chunk_id+'\t係り先番号\t'+dst)
+            #             chunk.srcs.append(dst)
+            #             # print(chunk)
 
         # 行頭が*でもEOSでも無い場合
         else:
@@ -118,3 +125,22 @@ with open(path, 'r') as read_file:
             morph = Morph(parsed_data)
             # chunkに突っ込みます
             chunk.morphs.append(morph)
+
+
+# for dst in dst_list:  # 係り先番号
+#     for chunk_id in chunk_id_list:  # 文節番号
+#         # print('係り先番号\t'+dst+'\t文節番号\t'+chunk_id)
+#         if chunk_id == dst:
+#             # print('一致')
+#             print('係り先番号\t'+dst+'\t文節番号\t'+chunk_id)
+#             chunk.srcs[dst].append(chunk_id)
+# # print(chunk)
+
+for dst in dst_list:  # 係り先番号
+    for chunk_id in chunk_id_list:  # 文節番号
+        # print('係り先番号\t'+dst+'\t文節番号\t'+chunk_id)
+        if chunk_id == dst:
+            # print('一致')
+            # print('係り先番号\t'+dst+'\t文節番号\t'+chunk_id)
+            chunk.srcs.append(chunk_id)
+            print(chunk)
