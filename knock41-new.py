@@ -11,9 +11,7 @@ class Morph:
         self.pos1 = data['pos1']  # 品詞細分類1
 
     def __repr__(self):
-        return "surface:{}\tbase:{}\tpos:{}\tpos1:{}".format(
-            self.surface, self.base, self.pos, self.pos1
-        )
+        return "surface:{}".format(self.surface)
 
 
 class Chunk:
@@ -25,8 +23,7 @@ class Chunk:
         self.morphs = []  # Morphオブジェクトのリスト
 
     def __repr__(self):
-        return "chunk_id:{}\tdst:{}\tsrcs:{}\tmorphs:{}".format(
-            self.chunk_id, self.dst, self.srcs, self.morphs)
+        return "chunk_id: {}\ndst: {}\nmorphs: {}\nsrcs: {}\n".format(self.chunk_id, self.dst, "".join([morph.surface for morph in self.morphs]), self.srcs)
 
 
 # \tで区切って表層系などに分ける
@@ -60,16 +57,14 @@ def split_t_and_parse(data):
     return parsed_data
 
 
-# chunkを入れとくリスト
-sentence = []
-# sentenceを入れとくリスト
-document = []
 # 読み込むテキスト
 path = './ai.ja.txt.parsed-min'
-# dstを入れるリスト
-dst_list = []
-# chunk_idを入れるリスト
+# 初期化
+sentence = []
+document = []
+chunk = Chunk("dummy", "dummy")
 chunk_id_list = []
+dst_list = []
 
 # ファイルを読み込む
 with open(path, 'r') as read_file:
@@ -77,47 +72,51 @@ with open(path, 'r') as read_file:
     for line in read_file:
         # *で始まったなら
         if line.startswith('*'):
+            # 有効なchunkなら
+            if len(chunk.morphs) > 0:
+                # chunkをsentenceに入れる
+                sentence.append(chunk)
+
             # \tと半角空白でsplit
             splitted = re.split('[\t ]', line)
             # 文節番号
-            chunk_id = splitted[1]
-
+            chunk_id = int(splitted[1])
+            chunk_id_list.append(chunk_id)
             # 係り先番号
-            dst = splitted[2].rstrip('D')
+            dst = int(splitted[2].rstrip('D'))
+            dst_list.append(dst)
+
             # chunkを作る（chunk_idとdstを入れる）
             chunk = Chunk(chunk_id, dst)
-
-            # 係り先番号をキープするリストに入れる
-            dst_list.append(dst)
-            # 文節番号をキープする配列に入れる
-            chunk_id_list.append(chunk_id)
-
-            print('文節番号\t'+chunk_id+'\t'+'係り先番号\t'+dst)
-
-            # print('dst\t{}\tchunk_id\t{}'.format(dst,chunk_id))
-            # for chunk_id in chunk:
-            #     print(chunk_id)
-            # chunkAがchunkBに係ってる（chunkA.dst == chunkB.chink_id）なら、chunkBのsrcsにchunkAのchunk_idを登録してやればいいよねぇ
-
-            # 文節番号
 
         # 行頭がEOS
         elif line.startswith('EOS'):
             # chunkをsentenceに入れる
             sentence.append(chunk)
-            # sentenceをdocumentに入れる
+
+            # TODO: chunk_id_list と dst_list を順番に見ていってsrcsを埋める
+            # for chunk_id, dst_id in ...
+
+            # enumerateでインデックス番号と中身？（要素）をそれぞれ取得
+            for chunk_index, chunk in enumerate(sentence):
+                # chunk_indexは文節番号 chunkはチャンク
+                # chunkのdst（係り先が-1でなければ）
+                if chunk.dst != -1:
+                    # sentence > chunkなので
+                    # sentenceというかリストの中のdst番目の場所にアクセスする
+                    # sentence.chunk.dstと書くとエラーになる（リストだから）
+                    # 文節番号を係り先のリストのsrcsに入れとく
+                    sentence[chunk.dst].srcs.append(chunk_index)
+
+                # sentenceをdocumentに入れる
             document.append(sentence)
+            # 初期化
+            sentence = []
+            chunk_id_list = []
+            dst_list = []
+            chunk = Chunk("dummy", "dummy")
 
-            # for chunk_id in chunk_id_list:  # 文節番号
-            #     for dst in dst_list:  # 係り先番号
-            #         print(chunk_id+'\t'+dst)
-            #         if chunk_id == dst:
-            #             # print('一致')
-            #             #             print('文節番号\t'+chunk_id+'\t係り先番号\t'+dst)
-            #             chunk.srcs.append(dst)
-            #             # print(chunk)
-
-        # 行頭が*でもEOSでも無い場合
+            # 行頭が*でもEOSでも無い場合
         else:
             # バラします
             parsed_data = split_t_and_parse(line)
@@ -126,21 +125,7 @@ with open(path, 'r') as read_file:
             # chunkに突っ込みます
             chunk.morphs.append(morph)
 
-
-# for dst in dst_list:  # 係り先番号
-#     for chunk_id in chunk_id_list:  # 文節番号
-#         # print('係り先番号\t'+dst+'\t文節番号\t'+chunk_id)
-#         if chunk_id == dst:
-#             # print('一致')
-#             print('係り先番号\t'+dst+'\t文節番号\t'+chunk_id)
-#             chunk.srcs[dst].append(chunk_id)
-# # print(chunk)
-
-for dst in dst_list:  # 係り先番号
-    for chunk_id in chunk_id_list:  # 文節番号
-        # print('係り先番号\t'+dst+'\t文節番号\t'+chunk_id)
-        if chunk_id == dst:
-            # print('一致')
-            # print('係り先番号\t'+dst+'\t文節番号\t'+chunk_id)
-            chunk.srcs.append(chunk_id)
-            print(chunk)
+for sentence in document:
+    for chunk in sentence:
+        print(chunk)
+    print("===EOS===")
