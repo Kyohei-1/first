@@ -1,11 +1,5 @@
 # coding: utf-8
 
-# 42. 係り元と係り先の文節の表示Permalink
-# 係り元の文節と係り先の文節のテキストをタブ区切り形式ですべて抽出せよ．ただし，句読点などの記号は出力しないようにせよ．
-
-
-# coding: utf-8
-
 import re
 
 
@@ -64,7 +58,7 @@ def split_t_and_parse(data):
 
 
 # 読み込むテキスト
-path = './ai.ja.txt.parsed-min'
+path = './4-data/ai.ja.txt.parsed'
 # 初期化
 sentence = []
 document = []
@@ -100,19 +94,27 @@ with open(path, 'r') as read_file:
             # chunkをsentenceに入れる
             sentence.append(chunk)
 
-            # TODO: chunk_id_list と dst_list を順番に見ていってsrcsを埋める
-            # for chunk_id, dst_id in ...
-
             # enumerateでインデックス番号と中身？（要素）をそれぞれ取得
             for chunk_index, chunk in enumerate(sentence):
                 # chunk_indexは文節番号 chunkはチャンク
                 # chunkのdst（係り先が-1でなければ）
                 if chunk.dst != -1:
+                    if chunk.dst == 'dummy':
+
+                        # TODO:
+
+                        # TypeError: list indices must be integers or slices, not str
+
+                        # chunk.dstにdummyが入っている時、
+                        # sentenceのdummy番目を参照出来なくて落ちる..
+
+                        sentence[chunk.dst].srcs.append(chunk_index)
                     # sentence > chunkなので
                     # sentenceというかリストの中のdst番目の場所にアクセスする
                     # sentence.chunk.dstと書くとエラーになる（リストだから）
                     # 文節番号を係り先のリストのsrcsに入れとく
-                    sentence[chunk.dst].srcs.append(chunk_index)
+
+
 
             # sentenceをdocumentに入れる
             document.append(sentence)
@@ -132,7 +134,8 @@ with open(path, 'r') as read_file:
                 # chunkに突っ込みます
                 chunk.morphs.append(morph)
 
-for sentence in document:
-    for chunk in sentence:
-        print(chunk)
-    print("===EOS===")
+
+# for sentence in document:
+#     for chunk in sentence:
+#         print(chunk)
+#     print("===EOS===")
