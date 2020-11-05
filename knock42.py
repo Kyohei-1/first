@@ -99,14 +99,7 @@ with open(path, 'r') as read_file:
                 # chunk_indexは文節番号 chunkはチャンク
                 # chunkのdst（係り先が-1でなければ）
                 if chunk.dst != -1:
-                    if chunk.dst == 'dummy':
-
-                        # TODO:
-
-                        # TypeError: list indices must be integers or slices, not str
-
-                        # chunk.dstにdummyが入っている時、
-                        # sentenceのdummy番目を参照出来なくて落ちる..
+                    if chunk.dst != 'dummy':
 
                         sentence[chunk.dst].srcs.append(chunk_index)
                     # sentence > chunkなので
@@ -135,7 +128,7 @@ with open(path, 'r') as read_file:
                 chunk.morphs.append(morph)
 
 
-# for sentence in document:
-#     for chunk in sentence:
-#         print(chunk)
-#     print("===EOS===")
+for sentence in document:
+    for chunk in sentence:
+        print(chunk)
+    # print("===EOS===")
