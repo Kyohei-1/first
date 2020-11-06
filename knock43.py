@@ -1,8 +1,5 @@
 # coding: utf-8
 
-# 43. 名詞を含む文節が動詞を含む文節に係るものを抽出Permalink
-# 名詞を含む文節が，動詞を含む文節に係るとき，これらをタブ区切り形式で抽出せよ．ただし，句読点などの記号は出力しないようにせよ．
-
 import re
 
 
@@ -14,7 +11,7 @@ class Morph:
         self.pos1 = data['pos1']  # 品詞細分類1
 
     def __repr__(self):
-        return "pos:".format(self.pos)
+        return "surface:".format(self.surface)
 
 
 class Chunk:
@@ -61,13 +58,15 @@ def split_t_and_parse(data):
 
 
 # 読み込むテキスト
-path = './ai.ja.txt.parsed-min'
+path = './4-data/ai.ja.txt.parsed'
 # 初期化
 sentence = []
 document = []
 chunk = Chunk("dummy", "dummy")
 chunk_id_list = []
 dst_list = []
+
+meisi_flg = False
 
 # ファイルを読み込む
 with open(path, 'r') as read_file:
@@ -86,6 +85,7 @@ with open(path, 'r') as read_file:
             chunk_id = int(splitted[1])
             chunk_id_list.append(chunk_id)
             # 係り先番号
+
             dst = int(splitted[2].rstrip('D'))
             dst_list.append(dst)
 
@@ -94,19 +94,23 @@ with open(path, 'r') as read_file:
 
         # 行頭がEOS
         elif line.startswith('EOS'):
-            # chunkをsentenceに入れる
-            sentence.append(chunk)
+            if chunk.chunk_id != 'dummy' or chunk.dst != 'dummy':
+                # chunkをsentenceに入れる
+                sentence.append(chunk)
 
             # enumerateでインデックス番号と中身？（要素）をそれぞれ取得
             for chunk_index, chunk in enumerate(sentence):
                 # chunk_indexは文節番号 chunkはチャンク
                 # chunkのdst（係り先が-1でなければ）
                 if chunk.dst != -1:
+                    if chunk.dst != 'dummy':
+
                     # sentence > chunkなので
                     # sentenceというかリストの中のdst番目の場所にアクセスする
                     # sentence.chunk.dstと書くとエラーになる（リストだから）
                     # 文節番号を係り先のリストのsrcsに入れとく
-                    sentence[chunk.dst].srcs.append(chunk_index)
+                        sentence[chunk.dst].srcs.append(chunk_index)
+
 
             # sentenceをdocumentに入れる
             document.append(sentence)
@@ -123,10 +127,23 @@ with open(path, 'r') as read_file:
             # morphを作ります
             morph = Morph(parsed_data)
             if parsed_data['pos'] != '記号':
+                # 43 名詞が含まれているかチェック
+                if parsed_data['pos'] == '名詞':
+                    # 名詞発見したらフラグを立てておく
+                    print('名詞発見\t'+parsed_data['surface'])
+                    meisi_flg = True
+                # meisiFlgがTrueならば、Falseにする
+                if meisi_flg == True:
+                    meisi_flg = False
+                    if parsed_data['pos'] == '動詞':
+                        print('動詞発見\t'+parsed_data['surface'])
                 # chunkに突っ込みます
                 chunk.morphs.append(morph)
 
-for sentence in document:
-    for chunk in sentence:
-        print(chunk)
-    print("===EOS===")
+
+
+
+# for sentence in document:
+#     for chunk in sentence:
+#         print(chunk)
+    # print("===EOS===")
