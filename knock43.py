@@ -22,6 +22,8 @@ class Chunk:
         self.srcs = []  # 係り元文節インデックス番号のリスト
         self.morphs = []  # Morphオブジェクトのリスト
 
+
+
     def __repr__(self):
         return "chunk_id: {}\ndst: {}\nmorphs: {}\nsrcs: {}\n".format(self.chunk_id, self.dst, "".join([morph.surface for morph in self.morphs]), self.srcs)
 
@@ -66,7 +68,8 @@ chunk = Chunk("dummy", "dummy")
 chunk_id_list = []
 dst_list = []
 
-meisi_flg = False
+verbFlg = False
+nounFlg = False
 
 # ファイルを読み込む
 with open(path, 'r') as read_file:
@@ -127,18 +130,15 @@ with open(path, 'r') as read_file:
             # morphを作ります
             morph = Morph(parsed_data)
             if parsed_data['pos'] != '記号':
-                # 43 名詞が含まれているかチェック
-                if parsed_data['pos'] == '名詞':
-                    # 名詞発見したらフラグを立てておく
-                    print('名詞発見\t'+parsed_data['surface'])
-                    meisi_flg = True
-                # meisiFlgがTrueならば、Falseにする
-                if meisi_flg == True:
-                    meisi_flg = False
-                    if parsed_data['pos'] == '動詞':
-                        print('動詞発見\t'+parsed_data['surface'])
-                # chunkに突っ込みます
-                chunk.morphs.append(morph)
+                # chunkに突っ込む前に判定させて。
+                if nounFlg and verbFlg == True:
+                    print('success')
+                if morph.pos == '動詞':
+                    verbFlg = True
+                    chunk.morphs.append(morph)
+                if morph.pos == '名詞':
+                    nounFlg = True
+                    chunk.morphs.append(morph)
 
 
 
