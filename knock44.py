@@ -1,6 +1,11 @@
 # coding: utf-8
 
 import re
+from graphviz import Graph
+from graphviz import Digraph
+import tqdm
+import pydot
+import pydoc
 
 
 class Morph:
@@ -132,6 +137,9 @@ with open(path, 'r') as read_file:
 #         print(chunk)
 # print("===EOS===")
 
+# ペアを入れる配列を用意
+pairs = []
+
 for sentence in document:
     for chunk in sentence:
         for morph in chunk.morphs:
@@ -143,3 +151,12 @@ for sentence in document:
             # 係り元に名詞が含まれて、かつ、係り先に動詞があるものを表示します
             if '名詞' in a_p and '動詞' in b_p:
                 print(a, b, sep='\t')
+                # ここから追記
+                c = a, b
+                pairs.append(c)
+            n = pydot.Node('node')
+            n.fontname = 'IPAGothic'
+            graph = pydot.graph_from_edges(pairs, directed=True)
+            graph.add_node(n)
+            graph.write_png('./output44.png')
+
