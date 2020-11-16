@@ -1,11 +1,12 @@
 # coding: utf-8
 
 import re
-from graphviz import Graph
-from graphviz import Digraph
-import tqdm
+# from graphviz import Graph
+# from graphviz import Digraph
+from tqdm import tqdm
 import pydot
-import pydoc
+
+# import pydoc
 
 
 class Morph:
@@ -64,7 +65,7 @@ def split_t_and_parse(data):
 
 
 # 読み込むテキスト
-path = 'ai.ja.txt.parsed'
+path = 'ai.ja.txt.parsed-min'
 # 初期化
 sentence = []
 document = []
@@ -139,18 +140,20 @@ with open(path, 'r') as read_file:
 
 # ペアを入れる配列を用意
 pairs = []
-
-for sentence in document:
+count = 0
+for sentence in tqdm(document):
+    count += 1
     for chunk in sentence:
         for morph in chunk.morphs:
             # posが記号以外ならchunk.morphsを
-            a = ''.join([b.surface if b.pos != '記号' else '' for b in chunk.morphs])
-            b = ''.join([b.surface if b.pos != '記号' else '' for b in sentence[int(chunk.dst)].morphs])
+            # ifのみに修正→elseを用いない場合、後ろにifを書くらしい。前に書くとsyntax error
+            a = ''.join([b.surface for b in chunk.morphs if b.pos != '記号'])
+            b = ''.join([b.surface for b in sentence[int(chunk.dst)].morphs if b.pos != '記号'])
             a_p = [b.pos for b in chunk.morphs]
             b_p = [b.pos for b in sentence[int(chunk.dst)].morphs]
-            # 係り元に名詞が含まれて、かつ、係り先に動詞があるものを表示します
+            # # 係り元に名詞が含まれて、かつ、係り先に動詞があるものを表示します
             if '名詞' in a_p and '動詞' in b_p:
-                print(a, b, sep='\t')
+                # print(a, b, sep='\t')
                 # ここから追記
                 c = a, b
                 pairs.append(c)
@@ -158,5 +161,4 @@ for sentence in document:
             n.fontname = 'IPAGothic'
             graph = pydot.graph_from_edges(pairs, directed=True)
             graph.add_node(n)
-            graph.write_png('./output44.png')
-
+            graph.write_png('./output.png')
