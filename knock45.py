@@ -1,4 +1,25 @@
 # coding: utf-8
+
+"""
+45. 動詞の格パターンの抽出
+今回用いている文章をコーパスと見なし，日本語の述語が取りうる格を調査したい．
+動詞を述語，動詞に係っている文節の助詞を格と考え，述語と格をタブ区切り形式で出力せよ．
+ただし，出力は以下の仕様を満たすようにせよ．
+
+動詞を含む文節において，最左の動詞の基本形を述語とする
+述語に係る助詞を格とする
+述語に係る助詞（文節）が複数あるときは，すべての助詞をスペース区切りで辞書順に並べる
+「ジョン・マッカーシーはAIに関する最初の会議で人工知能という用語を作り出した。」という例文を考える．
+この文は「作り出す」という１つの動詞を含み，
+「作り出す」に係る文節は「ジョン・マッカーシーは」，「会議で」，「用語を」であると解析された場合は，
+次のような出力になるはずである．
+
+作り出す	で は を
+このプログラムの出力をファイルに保存し，以下の事項をUNIXコマンドを用いて確認せよ．
+
+コーパス中で頻出する述語と格パターンの組み合わせ
+「行う」「なる」「与える」という動詞の格パターン（コーパス中で出現頻度の高い順に並べよ）
+"""
 from tqdm import tqdm
 import re
 
@@ -59,7 +80,7 @@ def split_t_and_parse(data):
 
 
 # 読み込むテキスト
-path = 'ai.ja.txt.parsed'
+path = 'ai.ja.txt.parsed-min'
 # 初期化
 sentence = []
 document = []
@@ -67,6 +88,7 @@ chunk = Chunk("dummy", "dummy")
 chunk_id_list = []
 dst_list = []
 verb_flg = False
+tmp = []
 
 # ファイルを読み込む
 with open(path, 'r') as read_file:
@@ -112,7 +134,7 @@ with open(path, 'r') as read_file:
             # sentenceをdocumentに入れる
             document.append(sentence)
             # 初期化
-            verb_flg = False
+            # verb_flg = False
             sentence = []
             chunk_id_list = []
             dst_list = []
@@ -124,11 +146,7 @@ with open(path, 'r') as read_file:
             parsed_data = split_t_and_parse(line)
             # morphを作ります
             morph = Morph(parsed_data)
-            if parsed_data['pos'] == '動詞' and verb_flg is False:
-                # print('係られている動詞\t' + parsed_data['base'])
-                # 先頭の動詞が欲しいので、先頭以外はflgで無視する
-                verb_flg = True
-                # chunkに突っ込む
+            # chunkに突っ込む
             chunk.morphs.append(morph)
 
 # TODO 係り先、係り元の内包表記は43のコピペ　すまん。
@@ -136,19 +154,37 @@ with open(path, 'r') as read_file:
 
 with open('./KF45.txt', 'w') as KF45:
     for sentence in document:
-        # 先頭だけ欲しいのでsentenceごとにflgで先頭のみ取る
+        # EOS区切りで1 sentenceなので文頭の動詞を取得する
         verb_flg = False
+
+        # 先頭だけ欲しいのでsentenceごとにflgで先頭のみ取る
         for chunk in sentence:
             for morph in chunk.morphs:
-                # posが記号以外ならchunk.morphsを
-                a = ''.join([b.surface if b.pos != '' else '' for b in chunk.morphs])
-                b = ''.join([b.surface if b.pos != '' else '' for b in sentence[int(chunk.dst)].morphs])
-                a_p = [b.pos for b in chunk.morphs]
-                b_p = [b.pos for b in sentence[int(chunk.dst)].morphs]
-                # 係り元に名詞が含まれて、かつ、係り先に動詞があるもの　かつ、flgがfalseのもの
-                if '助詞' in a_p and '動詞' in b_p and verb_flg is False:
-                    print(a, b, sep='\t', file=KF45)
+                # 各文の先頭の動詞を取得
+                if morph.pos == '動詞' and verb_flg is False:
                     verb_flg = True
+                    # 各文頭の動詞が取れた
+                    print(morph.surface, chunk.srcs, sep='\t')
+                    # 助詞判定
+                # if morph.pos == '助詞':
+
+
+    # print(morph.surface)
+    # if morph.pos == '動詞':
+    #     print('動詞', chunk.srcs, sep='\t')
+    # elif morph.pos == '助詞':
+    #     print('助詞', chunk.dst, sep='\t')
+
+    # a = ''.join([b.surface for b in chunk.morphs])
+    # b = ''.join([b.surface for b in sentence[int(chunk.dst)].morphs])
+    # a_p = [b.pos for b in chunk.morphs]
+    # b_p = [b.pos for b in sentence[int(chunk.dst)].morphs]
+    # print(a,b,sep='\t')
+    # # 係り元に名詞が含まれて、かつ、係り先に動詞があるもの　かつ、flgがfalseのもの
+    # if '助詞' in a_p and '動詞' in b_p and verb_flg is False:
+    #     # aに名詞＋助詞が入っているので、aを分割
+    #     print(b, a, sep='\t', file=KF45)
+    #     verb_flg = True
 
 # for sentence in document:
 #     for chunk in sentence:
