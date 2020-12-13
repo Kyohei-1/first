@@ -20,9 +20,8 @@
 コーパス中で頻出する述語と格パターンの組み合わせ
 「行う」「なる」「与える」という動詞の格パターン（コーパス中で出現頻度の高い順に並べよ）
 """
-from tqdm import tqdm
 import re
-
+from tqdm import tqdm
 
 class Morph:
     def __init__(self, data):
@@ -79,8 +78,24 @@ def split_t_and_parse(data):
     return parsed_data
 
 
+# この関数の引数のposは指定した品詞
+# def is_particle(data,pos):
+#     list_data = []
+#     # srcsを受け取る
+#     for srcs_data in data:
+#         for chunk in sentence:
+#             if chunk.chunk_id == srcs_data:
+#                 for morph in chunk.morphs:
+#                     # 指定した品詞かどうか判定なものを判定
+#                     if morph.pos == pos:
+#                         # print(morph.surface)
+#                         return True
+#                     else:
+#                         return False
+
+
 # 読み込むテキスト
-path = 'ai.ja.txt.parsed-min'
+path = 'ai.ja.txt.parsed'
 # 初期化
 sentence = []
 document = []
@@ -88,7 +103,6 @@ chunk = Chunk("dummy", "dummy")
 chunk_id_list = []
 dst_list = []
 verb_flg = False
-tmp = []
 
 # ファイルを読み込む
 with open(path, 'r') as read_file:
@@ -152,6 +166,10 @@ with open(path, 'r') as read_file:
 # TODO 係り先、係り元の内包表記は43のコピペ　すまん。
 # TODO UNIXコマンドでの確認は面倒だったから無視した。
 
+
+keep = []
+keep_last_i = 0
+
 with open('./KF45.txt', 'w') as KF45:
     for sentence in document:
         # EOS区切りで1 sentenceなので文頭の動詞を取得する
@@ -164,29 +182,40 @@ with open('./KF45.txt', 'w') as KF45:
                 if morph.pos == '動詞' and verb_flg is False:
                     verb_flg = True
                     # 各文頭の動詞が取れた
-                    print(morph.surface, chunk.srcs, sep='\t')
-                    # 助詞判定
-                # if morph.pos == '助詞':
+                    # print(morph.surface, chunk.srcs, sep='\t')
+                    # 同じ動詞に係っているものか判定
+                    i = 0
+                    for srcs in chunk.srcs:
+                        for tmp in sentence[srcs].morphs:
+                            # print(type(tmp.surface))
+                            if tmp.pos == '助詞':
+                                # print(tmp.surface)
 
+                                # 先頭は0番から来るので入れる(iの話)
+                                # print(tmp)
+                                if i == 0:
+                                    print(tmp.surface)
+                                    keep.append(tmp.surface)
+                                # 現在の周のiと1つ前の周のiを比較
+                                # ①　前回：0　今回：0　で同じ→違う動詞にかかっている
+                                # ②　前回：0　今回：1　などで増えている→同じ同士に係っている
+                                # ③　前回：3　今回：0　など数字が減少している→違う動詞になっている
+                                # と3パターン考えられる
 
-    # print(morph.surface)
-    # if morph.pos == '動詞':
-    #     print('動詞', chunk.srcs, sep='\t')
-    # elif morph.pos == '助詞':
-    #     print('助詞', chunk.dst, sep='\t')
+                                # ①
+                                if keep_last_i == i:
+                                    print(morph.surface, ' '.join(keep), sep='\t', file=KF45)
+                                    keep = []
+                                # ②
+                                if keep_last_i < i:
+                                    # keepに格納
+                                    keep.append(tmp.surface)
+                                # ③
+                                if keep_last_i > i:
+                                    print(morph.surface, ' '.join(keep), sep='\t', file=KF45)
+                                    keep = []
 
-    # a = ''.join([b.surface for b in chunk.morphs])
-    # b = ''.join([b.surface for b in sentence[int(chunk.dst)].morphs])
-    # a_p = [b.pos for b in chunk.morphs]
-    # b_p = [b.pos for b in sentence[int(chunk.dst)].morphs]
-    # print(a,b,sep='\t')
-    # # 係り元に名詞が含まれて、かつ、係り先に動詞があるもの　かつ、flgがfalseのもの
-    # if '助詞' in a_p and '動詞' in b_p and verb_flg is False:
-    #     # aに名詞＋助詞が入っているので、aを分割
-    #     print(b, a, sep='\t', file=KF45)
-    #     verb_flg = True
-
-# for sentence in document:
-#     for chunk in sentence:
-#         print(chunk)
-# print("===EOS===")
+                                # 現時点でのiをキープしておく
+                                keep_last_i = i
+                                i = i + 1
+                                print('Last : ' + str(keep_last_i), 'Now : ' + str(i), sep='\t')
