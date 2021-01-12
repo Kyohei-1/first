@@ -23,6 +23,7 @@
 import re
 from tqdm import tqdm
 
+
 class Morph:
     def __init__(self, data):
         self.surface = data['surface']  # 表層形
@@ -182,7 +183,21 @@ with open('./KF45.txt', 'w') as KF45:
                 if morph.pos == '動詞' and verb_flg is False:
                     verb_flg = True
                     # 各文頭の動詞が取れた
-                    # print(morph.surface, chunk.srcs, sep='\t')
+                    # print(morph.base, chunk.srcs, sep='\t')
+
+                    # if len(chunk.srcs) > 0:
+                    #     for srcs in chunk.srcs:
+                    #         if morph.pos == '助詞':
+                    #             print(morph.pos,srcs,sep='\t')
+                    for morph in chunk.morphs:
+                        if morph.pos == '助詞':
+                            print(morph.base)
+                            # TODO: ここで助詞（chunk.srcs)に入ってるやつ
+                            # TODO:（現在は 0,1,2等の数字）を文字にしたい。
+                            # TODO: 今のままだと、 作り出す 0 2 3 　　　みたいになってるので
+                            # TODO: 作り出す	で は を 　　　　という形にしたい
+                            # TODO: が、やり方が全く分からん...
+
                     # 同じ動詞に係っているものか判定
                     i = 0
                     for srcs in chunk.srcs:
@@ -194,7 +209,6 @@ with open('./KF45.txt', 'w') as KF45:
                                 # 先頭は0番から来るので入れる(iの話)
                                 # print(tmp)
                                 if i == 0:
-                                    print(tmp.surface)
                                     keep.append(tmp.surface)
                                 # 現在の周のiと1つ前の周のiを比較
                                 # ①　前回：0　今回：0　で同じ→違う動詞にかかっている
@@ -204,7 +218,7 @@ with open('./KF45.txt', 'w') as KF45:
 
                                 # ①
                                 if keep_last_i == i:
-                                    print(morph.surface, ' '.join(keep), sep='\t', file=KF45)
+                                    # print(morph.surface, ' '.join(keep), sep='\t', file=KF45)
                                     keep = []
                                 # ②
                                 if keep_last_i < i:
@@ -212,10 +226,10 @@ with open('./KF45.txt', 'w') as KF45:
                                     keep.append(tmp.surface)
                                 # ③
                                 if keep_last_i > i:
-                                    print(morph.surface, ' '.join(keep), sep='\t', file=KF45)
+                                    # print(morph.surface, ' '.join(keep), sep='\t', file=KF45)
                                     keep = []
 
                                 # 現時点でのiをキープしておく
                                 keep_last_i = i
                                 i = i + 1
-                                print('Last : ' + str(keep_last_i), 'Now : ' + str(i), sep='\t')
+                                # print('Last : ' + str(keep_last_i), 'Now : ' + str(i), sep='\t')
