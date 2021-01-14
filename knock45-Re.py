@@ -48,6 +48,10 @@ class Morph:
         # 使うのはbaseだと思うので変えといた
         return "base:{}".format(self.base)
 
+    # 　morphのposが指定した品詞かどうか判定する関数
+    def is_particle(morph, choice):
+        return morph.pos == choice
+
 
 class Chunk:
     def __init__(self, chunk_id, dst):
@@ -71,14 +75,19 @@ class Chunk:
 # 関数
 ##########################################################
 
+def debug(data):
+    print(data)
+    print(type(data))
+    exit()
+
+
 # \tで区切って表層形などに分ける関数
 def split_t_and_parse(data):
     splitted_data = data.split('\t')
     # 表層形(surface)
     surface = splitted_data[0]
     # 行末の改行を殺す
-    if surface == '*':
-        surface = surface.rstrip('\n')
+    surface = surface.rstrip('\n')
     # 表層形以外のもの
     splitted_data = splitted_data[-1].split(',')
     # 原型（基本形）(base)
@@ -96,11 +105,6 @@ def split_t_and_parse(data):
         'pos1': pos1
     }
     return parsed_data
-
-
-# 　morphのposが指定した品詞かどうか判定する関数
-def is_particle(morph, choice_pos):
-    return morph.surface == choice_pos
 
 
 # 行頭判定
@@ -123,6 +127,11 @@ chunk = Chunk('dummy', 'dummy')
 chunk_id_list = []
 # dst保管用
 dst_list = []
+# chunkのインデックス番号を入れる
+chunk_index = ''
+##########################################################
+# データを作るまで
+##########################################################
 
 # ファイル読み込み
 with open(path, 'r') as read_file:
@@ -130,18 +139,58 @@ with open(path, 'r') as read_file:
     for line in read_file:
         # 行頭が*
         if line_head_judgment(line, '*'):
-            print('T')
+            # print('*ルート')
+            # debug(line)
+            # morphsが作られているなら
+            if int(len(chunk.morphs)) > 0:
+                # chunkをsentenceに入れる
+                sentence.append(chunk)
+            # \tと半角空白でsplit
+            splitted = re.split('[\t ]', line)
+            # 文節番号
+            chunk_id = int(splitted[1])
+            chunk_id_list.append(chunk_id)
+            # 係り先番号
+            dst = int(splitted[2].rstrip('D'))
+
+            dst_list.append(dst)
+            # chunkを作る
+            chunk = Chunk(chunk_id, dst)
+
         # 行頭がEOS
-        if line_head_judgment(line,'EOS'):
-            print('F')
+        elif line_head_judgment(line, 'EOS'):
+            # print('EOSルート')
+            # debug(line)
+            # chunk_idとdstがdummyじゃない場合
+            if chunk.chunk_id != 'dummy' or chunk.dst != 'dummy':
+                # chunkをsentenceに入れる
+                sentence.append(chunk)
+
+            # インデックス番号と要素の中身を取得
+            for chunk_index, chunk in enumerate(sentence):
+                # TODO: 説明できないのでやり直す
+                sentence[chunk.dst].srcs.append(chunk_index)
+
+            # sentenceをdocumentに入れる
+            document.append(sentence)
+            # また使うものを初期化
+            sentence = []
+            chunk_id_list = []
+            dst_list = []
+            chunk = Chunk("dummy", "dummy")
+
         # 行頭が文字
         else:
+            # print('Otherルート')
+            # debug(line)
             # 品詞を分ける
             parsed_data = split_t_and_parse(line)
+            # debug(parsed_data)
             # morphを作る
             morph = Morph(parsed_data)
             # chunkに入れる
             chunk.morphs.append(morph)
 
-
-
+##########################################################
+# 出来たものを読んでいく
+##########################################################
