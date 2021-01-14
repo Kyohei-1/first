@@ -100,17 +100,12 @@ def split_t_and_parse(data):
 
 # 　morphのposが指定した品詞かどうか判定する関数
 def is_particle(morph, choice_pos):
-    if morph.surface == choice_pos:
-        return True
-    else:
-        return False
+    return morph.surface == choice_pos
 
 
+# 行頭判定
 def line_head_judgment(data, text):
-    if data.startswith(text):
-        return True
-    else:
-        return False
+    return data.startswith(text)
 
 
 ##########################################################
@@ -142,6 +137,11 @@ with open(path, 'r') as read_file:
         # 行頭が文字
         else:
             # 品詞を分ける
+            parsed_data = split_t_and_parse(line)
+            # morphを作る
+            morph = Morph(parsed_data)
+            # chunkに入れる
+            chunk.morphs.append(morph)
 
 
 
