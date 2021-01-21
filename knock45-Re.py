@@ -197,7 +197,7 @@ with open(path, 'r') as read_file:
 dousi = []
 zyosi = []
 result = []
-with open('./KF45.txt','w') as KF45:
+with open('./KF45.txt', 'w') as KF45:
     for sentence in document:
         for chunk in sentence:
             for morph in chunk.morphs:
@@ -209,7 +209,9 @@ with open('./KF45.txt','w') as KF45:
                 elif morph.pos == '助詞':
                     zyosi.append(morph.surface)
 
+        result.append(dousi + zyosi)
+        dousi, zyosi = [], []
+        # print(dousi)
+        # print(zyosi)
 
-result.append(dousi+zyosi)
-print(result)
-
+    print(result, file=KF45)
