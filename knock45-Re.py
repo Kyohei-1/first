@@ -26,6 +26,7 @@
 # ライブラリのインポートなど
 ##########################################################
 import re
+from tqdm import tqdm
 
 
 ##########################################################
@@ -136,7 +137,7 @@ chunk_index = ''
 # ファイル読み込み
 with open(path, 'r') as read_file:
     # 1行読み込む
-    for line in read_file:
+    for line in tqdm(read_file):
         # 行頭が*
         if line_head_judgment(line, '*'):
             # print('*ルート')
@@ -194,24 +195,36 @@ with open(path, 'r') as read_file:
 ##########################################################
 # 出来たものを読んでいく
 ##########################################################
-dousi = []
+# 動詞入れる
+dousi = ''
+# 助詞を入れるためのもの（sortするしね）
 zyosi = []
-result = []
-with open('./KF45.txt', 'w') as KF45:
-    for sentence in document:
-        for chunk in sentence:
-            for morph in chunk.morphs:
-                # posはmorph.pos
-                # surfaceはmorph.surface
-                # 動詞（述語）をGet
-                if morph.pos == '動詞':
-                    dousi.append(morph.surface)
-                elif morph.pos == '助詞':
-                    zyosi.append(morph.surface)
-
-        result.append(dousi + zyosi)
-        dousi, zyosi = [], []
-        # print(dousi)
-        # print(zyosi)
-
-    print(result, file=KF45)
+with open('./sortBefore.txt', 'w') as SB:
+    with open('./sortAfter.txt', 'w') as SA:
+        with open('./KF45.txt', 'w') as KF45:
+            for sentence in tqdm(document):
+                for chunk in sentence:
+                    for morph in chunk.morphs:
+                        # posはmorph.pos
+                        # surfaceはmorph.surface
+                        # 動詞（述語）をGet
+                        if morph.pos == '動詞':
+                            # 動詞を見つけたら、動詞を含むChunkに係っているChunkの助詞を見つけてくる
+                            # 動詞を入れる
+                            dousi = morph.base
+                            # print(morph.base,chunk.srcs,sep='\t')
+                            for srcs in chunk.srcs:
+                                for tmp in sentence[srcs].morphs:
+                                    if tmp.pos == '助詞':
+                                        # 助詞のリストに入れる
+                                        zyosi.append(tmp.base)
+                                        print(zyosi,file=SB)
+                                        zyosi.sort()
+                                        print(zyosi,file=SA)
+                            zyosiText = ' '.join(zyosi)
+                            zyosi = []
+                            # 助詞を並べられた
+                            # print(zyosiText)
+                            # 動詞並べられた。
+                            # print(bun)
+                            print(dousi, "\t", zyosiText, file=KF45)
