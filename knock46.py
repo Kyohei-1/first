@@ -5,12 +5,10 @@
 """
 46. 動詞の格フレーム情報の抽出
 45のプログラムを改変し，述語と格パターンに続けて項（述語に係っている文節そのもの）をタブ区切り形式で出力せよ．45の仕様に加えて，以下の仕様を満たすようにせよ．
-
 項は述語に係っている文節の単語列とする（末尾の助詞を取り除く必要はない）
 述語に係る文節が複数あるときは，助詞と同一の基準・順序でスペース区切りで並べる
 「ジョン・マッカーシーはAIに関する最初の会議で人工知能という用語を作り出した。」という例文を考える． この文は「作り出す」という１つの動詞を含み，
 「作り出す」に係る文節は「ジョン・マッカーシーは」，「会議で」，「用語を」であると解析された場合は，次のような出力になるはずである．
-
 作り出す	で は を	会議で ジョンマッカーシーは 用語を
 """
 ##########################################################
@@ -102,6 +100,38 @@ def split_t_and_parse(data):
 # 行頭判定
 def line_head_judgment(data, text):
     return data.startswith(text)
+
+
+def sort_kaku_kou(kaku_data, kou_data):
+    # kaku_data = ['は', 'で', 'を']
+    # kou_data = ['ジョン・マッカーシーは', '会議で', '用語を']
+    dic_list = []
+    # i = 1
+    kaku = []
+    kou = []
+    for item1, item2 in zip(kaku_data, kou_data):
+        dic_list.append({
+            'kaku': item1,
+            'kou': item2
+        })
+    # print(dic_list)
+
+    sorted_data = sorted(dic_list, key=lambda x: x['kaku'])
+
+    kaku = [chunk_dict["kaku"] for chunk_dict in sorted_data]
+    kou = [chunk_dict["kou"] for chunk_dict in sorted_data]
+    #
+    # for data1 in sorted_data:
+    #     # print(data1)
+    #     for data2 in data1.values():
+    #         if i % 2 == 0:
+    #             kou.append(data2)
+    #             i += 1
+    #         else:
+    #             kaku.append(data2)
+    #             i += 1
+
+    return kaku, kou
 
 
 ##########################################################
@@ -213,15 +243,16 @@ with open('../OutputData/sortBefore.txt', 'w') as SB:
                                         # 助詞のリストに入れる
                                         zyosi.append(tmp.base)
                                         print(zyosi, file=SB)
-                                        zyosi.sort()
+                                        # zyosi.sort()
                                         print(zyosi, file=SA)
                                         # 内包表記でsurfaceを順番に取ってくる
                                         chu.append(''.join(k.surface for k in sentence[srcs].morphs))
 
-                            zyosiText = ' '.join(zyosi)
-                            zyosi = []
+                            kaku,kou = sort_kaku_kou(zyosi,chu)
+                            print(dousi, ' '.join(kaku), ' '.join(kou), sep='\t', file=KF46)
                             # 助詞を並べられた
-                            # print(zyosiText)
+                            # print(zyosi)
+                            zyosi = []
                             # 動詞並べられた。
-                            # print(bun)
-                            print(dousi, "\t", zyosiText, ' '.join(chu), file=KF46)
+                            # print(chu)
+                            # print(dousi, "\t", zyosiText, ' '.join(chu), file=KF46)
