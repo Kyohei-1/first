@@ -210,8 +210,10 @@ with open(path, 'r') as read_file:
             # debug(parsed_data)
             # morphを作る
             morph = Morph(parsed_data)
-            # chunkに入れる
-            chunk.morphs.append(morph)
+            # chunkに入れる前に記号を除去
+            if parsed_data['pos'] != '記号':
+                # chunkに突っ込みます
+                chunk.morphs.append(morph)
 
 ##########################################################
 # 出来たものを読んでいく
@@ -248,8 +250,9 @@ with open('../OutputData/sortBefore.txt', 'w') as SB:
                                         # 内包表記でsurfaceを順番に取ってくる
                                         chu.append(''.join(k.surface for k in sentence[srcs].morphs))
 
-                            kaku,kou = sort_kaku_kou(zyosi,chu)
-                            print(dousi, ' '.join(kaku), ' '.join(kou), sep='\t', file=KF46)
+                            kaku, kou = sort_kaku_kou(zyosi, chu)
+                            if len(chu) > 0:
+                                print(dousi, ' '.join(kaku), ' '.join(kou), sep='\t', file=KF46)
                             # 助詞を並べられた
                             # print(zyosi)
                             zyosi = []
